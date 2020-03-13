@@ -17,8 +17,6 @@ function main() {
 
   const changes = [];
   function handleLiteral(node) {
-    console.log('handleLiteral', handleLiteral);
-    console.log('node', node);
     const oldValue = node.value;
     node.value = getClass();
 
@@ -65,7 +63,6 @@ function main() {
       const node = path.node;
       const attrName = node.name.name;
       const attrValue = node.value;
-      console.log('attrValue.type', attrValue.type);
       if (attrName !== 'className') {
         return;
       }
@@ -81,7 +78,6 @@ function main() {
   });
 
   const output = generator(ast);
-  console.log('changes', changes);
   fs.writeFileSync(path.resolve(__dirname, '../output.js'), output.code);
 }
 
