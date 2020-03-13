@@ -1,16 +1,15 @@
 module.exports = () => {
-
   return {
-    "presets": [
-      "@babel/preset-env",
+    presets: [
+      '@babel/preset-env',
       [
-        "@babel/preset-react",
+        '@babel/preset-react',
         {
-          "pragma": "dom", // default pragma is React.createElement
-          "pragmaFrag": "DomFrag", // default is React.Fragment
-          "throwIfNamespace": false // defaults to true
-        }
-      ]
-    ]
-  }
-}
+          pragma: 'dom', // default pragma is React.createElement
+          pragmaFrag: 'DomFrag', // default is React.Fragment
+          throwIfNamespace: false, // defaults to true
+        },
+      ],
+    ],
+  };
+};
