@@ -1,18 +1,22 @@
-function genClassNames() {
+function base52(n) {
   const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  const classes = [];
-  for (let x = 0; x < chars.length; x++) {
-    for (let y = 0; y < chars.length; y++) {
-      for (let z = 0; z < chars.length; z++) {
-        classes.push(chars[x] + chars[y] + chars[z]);
-      }
+  const len = chars.length;
+  const res = [];
+  let div = n;
+  let y;
+  if (div === 0) {
+    res.push(chars[0]);
+  } else {
+    while (div !== 0) {
+      y = div % len;
+      res.unshift(chars[y]);
+      div = Math.floor(div / len);
     }
   }
 
-  return classes;
+  return res.join('');
 }
 
-const classes = genClassNames();
 let index = 0;
 
-module.exports = () => classes[index++];
+module.exports = () => base52(index++);

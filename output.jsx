@@ -10,18 +10,18 @@ export default class App extends React.Component {
     const actived = true;
     const hello = 'hello';
     const world = 'world';
-    return <div className="aaa">
-        <div className={cs("aab", hello, ["aac"], {
-        aad: world
+    return <div className="a">
+        <div className={cs("b", hello, ["c"], {
+        d: world
       }, {
-        aae: false
+        e: false
       }, {
-        aaf: actived
+        f: actived
       })}>
-          <h1 className={cs("aag", "aah", {
-          aai: true
+          <h1 className={cs("g", "h", {
+          i: true
         })}></h1>
-          <a className="aaj"></a>
+          <a className="j k l"></a>
         </div>
       </div>;
   }

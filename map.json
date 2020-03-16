@@ -1,0 +1,14 @@
+{
+    "app-wrapper": "a",
+    "app-inner": "b",
+    "array-item": "c",
+    "world": "d",
+    "isBlock": "e",
+    "isActived": "f",
+    "title": "g",
+    "bold": "h",
+    "large": "i",
+    "link": "j",
+    "underline": "k",
+    "blue": "l"
+}

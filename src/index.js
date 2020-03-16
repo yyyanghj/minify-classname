@@ -4,9 +4,13 @@ const path = require('path');
 const parser = require('@babel/parser');
 const traverse = require('@babel/traverse').default;
 const generator = require('@babel/generator').default;
-// const bt = require('@babel/types');
 const getClass = require('./classname');
 const getCode = require('./code');
+
+// step
+// 1. traverse ast , generator map
+// 2. update jsx ast
+// 3. update css
 
 function main() {
   const code = getCode();
@@ -15,19 +19,28 @@ function main() {
     plugins: ['jsx'],
   });
 
-  const changes = [];
+  const map = {};
   function handleLiteral(node) {
-    const oldValue = node.value;
-    node.value = getClass();
+    const oldClassNames = node.value.split(' ').map(cls => cls.trim());
+    const newClassNames = oldClassNames.reduce((res, cls) => {
+      const newCls = getClass();
+      if (!map[cls]) {
+        map[cls] = newCls;
+      }
+      res.push(newCls);
+      return res;
+    }, []);
 
-    changes.push(`Literal: ${oldValue} -> ${node.value}`);
+    node.value = newClassNames.join(' ');
   }
 
   function handleObjectExpression(node) {
     node.properties.forEach(propNode => {
       const oldValue = propNode.key.name;
       propNode.key.name = getClass();
-      changes.push(`Object Prop: ${oldValue} -> ${propNode.key.name}`);
+      if (!map[oldValue]) {
+        map[oldValue] = propNode.key.name;
+      }
     });
   }
 
@@ -78,7 +91,8 @@ function main() {
   });
 
   const output = generator(ast);
-  fs.writeFileSync(path.resolve(__dirname, '../output.js'), output.code);
+  fs.writeFileSync(path.resolve(__dirname, '../output.jsx'), output.code);
+  fs.writeFileSync(path.resolve(__dirname, '../map.json'), JSON.stringify(map, null, 4));
 }
 
 main();
