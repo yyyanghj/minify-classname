@@ -85,3 +85,24 @@ export default function App() {
 ```
 
 
+## quick start
+```js
+// webpack.config.js
+const minifyClassNamePlugin = require('minify-classname')
+
+plugin: [
+  new minifyClassNamePlugin();
+],
+module: {
+  rules: [
+    {
+      test: /\.jsx$/,
+      use: [
+        'babel-loader',
+        // should after babel-loader
+        { loader: minifyClassNamePlugin.loader }
+      ],
+    },
+  ]
+}
+```
