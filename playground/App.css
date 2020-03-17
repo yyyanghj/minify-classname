@@ -1,0 +1,49 @@
+.app-wrapper {
+    text-align: center;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+}
+
+.header {
+    padding: 24px;
+}
+
+.flex {
+    display: flex;
+}
+
+.flex-center {
+    align-items: center;
+    justify-content: center;
+}
+
+.flex-col {
+    flex-direction: column;
+}
+
+.title {
+    line-height: 1.5;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.ink {
+    color: #14181f;
+}
+
+.text-large {
+    font-size: 60px;
+}
+
+.mt-1 {
+    margin-top: 16px;
+}
+
+.blue {
+    color: hsl(200, 90%, 50%);
+}
+
+.underline {
+    text-decoration: underline;
+}

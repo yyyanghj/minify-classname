@@ -7,7 +7,7 @@ module.exports = {
       experimentalObjectRestSpread: true,
       jsx: true,
     },
-    ecmaVersion: 9,
+    ecmaVersion: 2020,
     sourceType: 'module',
   },
   extends: [

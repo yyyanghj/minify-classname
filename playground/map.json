@@ -1,0 +1,14 @@
+{
+    "app-wrapper": "a",
+    "header": "b",
+    "flex": "c",
+    "flex-center": "d",
+    "flex-col": "e",
+    "title": "f",
+    "bold": "g",
+    "ink": "h",
+    "text-large": "i",
+    "blue": "j",
+    "underline": "k",
+    "mt-1": "l"
+}

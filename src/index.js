@@ -1,3 +1,3 @@
-const minify = require('./core');
+const plugin = require('./plugin');
 
-exports.minify = minify;
+module.exports = plugin;

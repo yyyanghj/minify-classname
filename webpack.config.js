@@ -1,7 +1,9 @@
 const path = require('path');
 const webpack = require('webpack');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const minifyClassNamePlugin =  require('./src')
 
 const resolve = dir => path.resolve(__dirname, dir);
 
@@ -15,7 +17,7 @@ module.exports = (env, argv) => {
 
     // 入口
     entry: {
-      app: resolve('src/index.ts'),
+      app: resolve('playground/main.js'),
     },
 
     // 出口
@@ -42,14 +44,6 @@ module.exports = (env, argv) => {
 
       // 自动打开浏览器
       open: true,
-
-      // port: 8080,
-      // host: 'localhost',
-      // compress: false,
-    },
-
-    externals: {
-      $: 'jQuery',
     },
 
     resolve: {
@@ -60,7 +54,7 @@ module.exports = (env, argv) => {
       modules: [resolve('src'), 'node_modules'],
 
       // 文件查找顺序
-      extensions: ['.vue', 'tsx', '.ts', '.jsx', '.js', '.json'],
+      extensions: ['.jsx', '.js', '.json'],
 
       // 是否强制导入语句必须要写明文件后缀
       enforceExtension: false,
@@ -76,6 +70,11 @@ module.exports = (env, argv) => {
       new CleanWebpackPlugin(),
       new webpack.NamedModulesPlugin(),
       new webpack.HotModuleReplacementPlugin(),
+      new minifyClassNamePlugin(),
+      new MiniCssExtractPlugin({
+        filename: '[name].css',
+        chunkFilename: '[id].css',
+      }),
       new HtmlWebpackPlugin({
         template: resolve('public/index.html'),
         filename: 'index.html',
@@ -86,21 +85,26 @@ module.exports = (env, argv) => {
     module: {
       rules: [
         {
-          test: /\.jsx?$/,
-          include: [resolve('src')],
-          use: ['babel-loader'],
+          test: /\.js$/,
+          use: [
+            'babel-loader',
+          ],
+        },
+        {
+          test: /\.jsx$/,
+          use: [
+            'babel-loader',
+            { loader: minifyClassNamePlugin.loader }
+          ],
         },
 
         {
           test: /\.css$/,
           use: [
             {
-              loader: 'css-loader',
-              options: {
-                importLoaders: 1,
-              },
+              loader: MiniCssExtractPlugin.loader,
             },
-            'postcss-loader',
+            'css-loader'
           ],
         },
       ],
