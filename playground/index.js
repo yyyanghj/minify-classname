@@ -14,8 +14,9 @@ function getCode(filename) {
 function main() {
   const { output, map } = minify(getCode('./App.jsx'));
   const cs = new CssShortener();
-  cs.importMap(map)
-  const newcss = cs.replaceCss(getCode('./App.css'));
+  cs.importMap(map);
+  const source = getCode('./App.css')
+  const newcss = cs.replaceCss(source);
 
   fs.writeFileSync(resolve('./output.jsx'), output.code);
   fs.writeFileSync(resolve('./map.json'), JSON.stringify(map, null, 4));

@@ -10,15 +10,11 @@ class minifyClassnamePlugin {
       const assets = compilation.getAssets();
       const cs = new CssShortener();
       const map = getMap();
-      cs.importMap(map, true);
+      cs.importMap(map);
       assets.forEach(asset => {
         if (asset.name.endsWith('css')) {
           const _asset = compilation.assets[asset.name];
-          const source = _asset.source();
-          console.log('css source', source);
-          // console.log('map', map);
-          const newcss = cs.replaceCss(source);
-          console.log('newcss', newcss);
+          const newcss = cs.replaceCss(_asset.source());
           _asset.source = function() {
             return newcss;
           };
