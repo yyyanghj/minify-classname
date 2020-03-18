@@ -1,50 +1,50 @@
-.app-wrapper {
+.a {
     text-align: center;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
 }
 
-.header {
+.b {
     padding: 24px;
 }
 
-.flex {
+.c {
     display: flex;
 }
 
-.flex-center {
+.d {
     align-items: center;
     justify-content: center;
 }
 
-.flex-col {
+.e {
     flex-direction: column;
 }
 
-.title {
+.f {
     line-height: 1.5;
 }
 
-.bold {
+.g {
     font-weight: bold;
 }
 
-.ink {
+.h {
     color: #14181f;
 }
 
-.text-large {
+.i {
     font-size: 60px;
 }
 
-.mt-1 {
+.l {
     margin-top: 16px;
 }
 
-.blue {
+.j {
     color: hsl(200, 90%, 50%);
 }
 
-.underline {
+.k {
     text-decoration: underline;
 }
 
@@ -56,6 +56,6 @@
     color: hsl(345, 90%, 50%);
 }
 
-.Text {
+.m {
     font-size: 24px;
 }

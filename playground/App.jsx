@@ -14,7 +14,7 @@ export default function App() {
         >
           Hello World
         </h1>
-        <a className={classnames('blue underline mt-1', { [link]: true })}>Awesome😁</a>
+        <a className={classnames('blue underline mt-1 Text', { [link]: true })}>Awesome😁</a>
       </header>
     </div>
   );

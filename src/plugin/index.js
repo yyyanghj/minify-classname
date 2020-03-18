@@ -1,20 +1,19 @@
 const path = require('path');
-const CssShortener = require('css-shortener');
-const { getMap } = require('./map');
+const Minify = require('../core');
 
-class minifyClassnamePlugin {
-  constructor() {}
+class minifyClassNamePlugin {
+  constructor(options) {
+    minifyClassNamePlugin.minifyInstance = new Minify(options);
+  }
 
   apply(compiler) {
+    const instance = minifyClassNamePlugin.minifyInstance;
     compiler.hooks.emit.tapAsync('minifyClassnamePlugin', (compilation, callback) => {
       const assets = compilation.getAssets();
-      const cs = new CssShortener();
-      const map = getMap();
-      cs.importMap(map);
       assets.forEach(asset => {
         if (asset.name.endsWith('css')) {
           const _asset = compilation.assets[asset.name];
-          const newcss = cs.replaceCss(_asset.source());
+          const newcss = instance.replaceCSS(_asset.source());
           _asset.source = function() {
             return newcss;
           };
@@ -28,6 +27,7 @@ class minifyClassnamePlugin {
   }
 }
 
-minifyClassnamePlugin.loader = path.resolve(__dirname, './loader');
+minifyClassNamePlugin.minifyInstance = null;
+minifyClassNamePlugin.loader = path.resolve(__dirname, './loader');
 
-module.exports = minifyClassnamePlugin;
+module.exports = minifyClassNamePlugin;

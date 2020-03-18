@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
-const minify = require('../src/core');
-const CssShortener = require('css-shortener');
+const Minify = require('../src/core');
+
 const resolve = dir => path.resolve(__dirname, dir);
 
 function getCode(filename) {
@@ -12,11 +12,10 @@ function getCode(filename) {
 
 
 function main() {
-  const { output, map } = minify(getCode('./App.jsx'));
-  const cs = new CssShortener();
-  cs.importMap(map);
-  const source = getCode('./App.css')
-  const newcss = cs.replaceCss(source);
+  const instance = new Minify();
+  const output = instance.minify(getCode('./App.jsx'));
+  const newcss = instance.replaceCSS(getCode('./App.css'));
+  const map = instance.getMap();
 
   fs.writeFileSync(resolve('./output.jsx'), output.code);
   fs.writeFileSync(resolve('./map.json'), JSON.stringify(map, null, 4));
