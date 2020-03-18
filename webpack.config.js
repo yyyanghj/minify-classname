@@ -3,7 +3,8 @@ const webpack = require('webpack');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const minifyClassNamePlugin = require('./src');
+
+const MinifyClassName = require('./src/index.js')
 
 const resolve = dir => path.resolve(__dirname, dir);
 
@@ -33,7 +34,7 @@ module.exports = (env, argv) => {
       chunkFilename: '[chunkhash].js',
     },
 
-    devtool: 'cheap-module-eval-source-map',
+    devtool: 'source-map',
 
     devServer: {
       // 配置 DevServer HTTP 服务器的文件根目录
@@ -70,7 +71,7 @@ module.exports = (env, argv) => {
       new CleanWebpackPlugin(),
       new webpack.NamedModulesPlugin(),
       new webpack.HotModuleReplacementPlugin(),
-      new minifyClassNamePlugin({
+      new MinifyClassName({
         ignorePrefix: 'ignore'
       }),
       new MiniCssExtractPlugin({
@@ -95,11 +96,12 @@ module.exports = (env, argv) => {
         {
           test: /\.jsx$/,
           use: [
-            'babel-loader',
-            { loader: minifyClassNamePlugin.loader }
+            {
+              loader: 'babel-loader', 
+              options: { plugins: [MinifyClassName.babelPlugin] }
+            },
           ],
         },
-
         {
           test: /\.css$/,
           use: [

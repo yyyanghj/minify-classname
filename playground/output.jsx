@@ -1,5 +1,6 @@
 import React from 'react';
 import classnames from 'classnames';
+import Button from './Button.jsx';
 import './App.css';
 export default function App() {
   const hello = 'hello';
@@ -30,6 +31,7 @@ export default function App() {
         >
           Awesome😁
         </a>
+        <Button>Blue Button</Button>
       </header>
     </div>
   );

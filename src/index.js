@@ -1,3 +1,6 @@
-const plugin = require('./plugin');
+const babelPlugin = require('./babel');
+const webpackPlugin = require('./webpack');
 
-module.exports = plugin;
+webpackPlugin.babelPlugin = babelPlugin;
+
+module.exports = webpackPlugin;
