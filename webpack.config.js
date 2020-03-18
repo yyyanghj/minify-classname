@@ -70,7 +70,9 @@ module.exports = (env, argv) => {
       new CleanWebpackPlugin(),
       new webpack.NamedModulesPlugin(),
       new webpack.HotModuleReplacementPlugin(),
-      new minifyClassNamePlugin(),
+      new minifyClassNamePlugin({
+        ignorePrefix: 'ignore'
+      }),
       new MiniCssExtractPlugin({
         filename: '[name].css',
         chunkFilename: '[id].css',

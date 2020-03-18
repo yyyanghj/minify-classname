@@ -23,11 +23,25 @@ function generatorClassName(n) {
 
 const CLASS_NAME_REGEX = /\/\*[\s\S]*?\*\/|(\.[a-zA-Z_-][\w-]*)(?=[^{}]*{)/g;
 
+const DEFAULT_OPTIONS = {
+  ignorePrefix: null,
+};
+
+const getType = val => {
+  return typeof val === 'string' ? typeof val : Object.prototype.toString.call(val).slice(8, -1);
+};
+
+const isString = v => typeof v === 'string';
+const isRegExp = v => getType(v) === 'RegExp';
+
 class Minify {
   constructor(options = {}) {
     this.index = 0;
     this.map = {};
-    this.options = options;
+    this.options = {
+      ...DEFAULT_OPTIONS,
+      ...options,
+    };
   }
 
   getNewClass(className) {
@@ -38,13 +52,23 @@ class Minify {
     return (this.map[className] = generatorClassName(this.index++));
   }
 
+  shouldIgnore(cls) {
+    const prefix = this.options.ignorePrefix;
+    if (isString(prefix) && prefix) {
+      return cls.startsWith(prefix);
+    } else if (isRegExp(prefix)) {
+      return cls.test(prefix);
+    }
+
+    return false;
+  }
+
   handleStringLiteral(node) {
     node.value = node.value
       .split(' ')
       .map(cls => cls.trim())
       .reduce((res, cls) => {
-        // TODO: ignore
-        const newCls = this.getNewClass(cls);
+        const newCls = this.shouldIgnore(cls) ? cls : this.getNewClass(cls);
         res.push(newCls);
         return res;
       }, [])
@@ -58,9 +82,10 @@ class Minify {
       if (key.type === 'StringLiteral') {
         this.handleStringLiteral(key);
       } else if (key.type === 'Identifier' && !property.computed) {
-        // TODO: ignore
         const name = key.name;
-        key.name = this.getNewClass(name);
+        if (!this.shouldIgnore(name)) {
+          key.name = this.getNewClass(name);
+        }
       }
     });
   }
@@ -123,7 +148,9 @@ class Minify {
 
   replaceCSS(cssString) {
     const getNewClassName = cls => {
-      // TODO: ignore
+      if (this.shouldIgnore(cls)) {
+        return cls;
+      }
       return this.map[cls] || cls;
     };
 

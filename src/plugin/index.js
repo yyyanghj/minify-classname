@@ -2,7 +2,7 @@ const path = require('path');
 const Minify = require('../core');
 
 class minifyClassNamePlugin {
-  constructor(options) {
+  constructor(options = {}) {
     minifyClassNamePlugin.minifyInstance = new Minify(options);
   }
 
