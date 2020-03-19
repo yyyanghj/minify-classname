@@ -75,7 +75,7 @@ module.exports = (env, argv) => {
         ignorePrefix: 'ignore'
       }),
       new MiniCssExtractPlugin({
-        filename: '[name].css',
+        filename: '[name].[hash:8].css',
         chunkFilename: '[id].css',
       }),
       new HtmlWebpackPlugin({

@@ -1,6 +1,6 @@
 {
   "name": "minify-classname",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "minify classname",
   "main": "src/index.js",
   "author": "yang",
@@ -10,9 +10,7 @@
     "dev": "webpack-dev-server --port 8080",
     "build": "webpack --mode production"
   },
-  "dependencies": {
-    
-  },
+  "dependencies": {},
   "devDependencies": {
     "autoprefixer": "^9.7.4",
     "babel-loader": "^8.0.6",
