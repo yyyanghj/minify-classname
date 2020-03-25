@@ -4,16 +4,60 @@ const shouldIgnore = require('../shouldIgnore');
 module.exports = function() {
   let csName = 'classnames';
 
-  function handleStringLiteral(node) {
-    node.value = node.value
-      .split(' ')
-      .map(cls => cls.trim())
-      .reduce((res, cls) => {
-        const newCls = shouldIgnore(cls) ? cls : getNewClass(cls);
-        res.push(newCls);
-        return res;
-      }, [])
+  /**
+   * @param {string} classNameStr
+   * @example getNewClassStr('hello world  hello1   react') => 'a b c d'
+   */
+  const getNewClassStr = classNameStr => {
+    if (!classNameStr) {
+      return '';
+    }
+
+    return classNameStr
+      .split(/\s+/)
+      .filter(c => c.trim())
+      .map(cn => (shouldIgnore(cn) ? cn : getNewClass(cn)))
       .join(' ');
+  };
+
+  function handleStringLiteral(node, name = 'value') {
+    node[name] = getNewClassStr(node[name]);
+  }
+
+  function handleJSXExpressionContainer(expNode) {
+    const expr = expNode.expression;
+
+    // string
+    if (expr.type === 'StringLiteral') {
+      handleStringLiteral(expr);
+    }
+
+    // template string
+    if (expr.type === 'TemplateLiteral') {
+      handleTemplateLiteral(expr);
+    }
+
+    // handle classnames call
+    if (expr.type === 'CallExpression' && expr.callee.name === csName) {
+      expr.arguments.forEach(node => {
+        if (node.type === 'StringLiteral') {
+          handleStringLiteral(node);
+        }
+        if (node.type === 'ObjectExpression') {
+          handleObjectExpression(node);
+        }
+        if (node.type === 'ArrayExpression') {
+          handleArrayExpression(node);
+        }
+      });
+    }
+  }
+
+  function handleTemplateLiteral(node) {
+    node.quasis.forEach(({ value }) => {
+      value.raw = ' ' + getNewClassStr(value.raw) + ' ';
+      value.cooked = value.raw;
+    });
   }
 
   function handleObjectExpression(node) {
@@ -23,10 +67,7 @@ module.exports = function() {
       if (key.type === 'StringLiteral') {
         handleStringLiteral(key);
       } else if (key.type === 'Identifier' && !property.computed) {
-        const name = key.name;
-        if (!shouldIgnore(name)) {
-          key.name = getNewClass(name);
-        }
+        key.name = getNewClassStr(key.name);
       }
     });
   }
@@ -35,29 +76,6 @@ module.exports = function() {
     node.elements.forEach(elem => {
       if (elem.type === 'StringLiteral') {
         handleStringLiteral(elem);
-      }
-    });
-  }
-
-  function handleJSXExpressionContainer(expNode) {
-    const expr = expNode.expression;
-    if (expr.type !== 'CallExpression') {
-      return;
-    }
-
-    if (expr.callee.name !== csName) {
-      return;
-    }
-
-    expr.arguments.forEach(node => {
-      if (node.type === 'StringLiteral') {
-        handleStringLiteral(node);
-      }
-      if (node.type === 'ObjectExpression') {
-        handleObjectExpression(node);
-      }
-      if (node.type === 'ArrayExpression') {
-        handleArrayExpression(node);
       }
     });
   }

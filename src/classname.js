@@ -20,6 +20,9 @@ function generatorClassName(n) {
 }
 
 function getNewClass(className) {
+  if (!className) {
+    return '';
+  }
   const ctx = getContext();
   if (ctx.map[className]) {
     return ctx.map[className];
