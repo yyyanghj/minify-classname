@@ -1,61 +1,67 @@
 const getNewClass = require('../classname.js');
 const shouldIgnore = require('../shouldIgnore');
 
-function handleStringLiteral(node) {
-  node.value = node.value
-    .split(' ')
-    .map(cls => cls.trim())
-    .reduce((res, cls) => {
-      const newCls = shouldIgnore(cls) ? cls : getNewClass(cls);
-      res.push(newCls);
-      return res;
-    }, [])
-    .join(' ');
-}
+module.exports = function() {
+  let csName = 'classnames';
 
-function handleObjectExpression(node) {
-  node.properties.forEach(property => {
-    const key = property.key;
-
-    if (key.type === 'StringLiteral') {
-      handleStringLiteral(key);
-    } else if (key.type === 'Identifier' && !property.computed) {
-      const name = key.name;
-      if (!shouldIgnore(name)) {
-        key.name = getNewClass(name);
-      }
-    }
-  });
-}
-
-function handleArrayExpression(node) {
-  node.elements.forEach(elem => {
-    if (elem.type === 'StringLiteral') {
-      handleStringLiteral(elem);
-    }
-  });
-}
-
-function handleJSXExpressionContainer(expNode) {
-  const expr = expNode.expression;
-  if (expr.type !== 'CallExpression') {
-    return;
+  function handleStringLiteral(node) {
+    node.value = node.value
+      .split(' ')
+      .map(cls => cls.trim())
+      .reduce((res, cls) => {
+        const newCls = shouldIgnore(cls) ? cls : getNewClass(cls);
+        res.push(newCls);
+        return res;
+      }, [])
+      .join(' ');
   }
 
-  expr.arguments.forEach(node => {
-    if (node.type === 'StringLiteral') {
-      handleStringLiteral(node);
-    }
-    if (node.type === 'ObjectExpression') {
-      handleObjectExpression(node);
-    }
-    if (node.type === 'ArrayExpression') {
-      handleArrayExpression(node);
-    }
-  });
-}
+  function handleObjectExpression(node) {
+    node.properties.forEach(property => {
+      const key = property.key;
 
-module.exports = function() {
+      if (key.type === 'StringLiteral') {
+        handleStringLiteral(key);
+      } else if (key.type === 'Identifier' && !property.computed) {
+        const name = key.name;
+        if (!shouldIgnore(name)) {
+          key.name = getNewClass(name);
+        }
+      }
+    });
+  }
+
+  function handleArrayExpression(node) {
+    node.elements.forEach(elem => {
+      if (elem.type === 'StringLiteral') {
+        handleStringLiteral(elem);
+      }
+    });
+  }
+
+  function handleJSXExpressionContainer(expNode) {
+    const expr = expNode.expression;
+    if (expr.type !== 'CallExpression') {
+      return;
+    }
+
+    if (expr.callee.name !== csName) {
+      return;
+    }
+
+    expr.arguments.forEach(node => {
+      if (node.type === 'StringLiteral') {
+        handleStringLiteral(node);
+      }
+      if (node.type === 'ObjectExpression') {
+        handleObjectExpression(node);
+      }
+      if (node.type === 'ArrayExpression') {
+        handleArrayExpression(node);
+      }
+    });
+  }
+
   return {
     visitor: {
       JSXAttribute: path => {
@@ -72,6 +78,17 @@ module.exports = function() {
 
         if (value.type === 'JSXExpressionContainer') {
           handleJSXExpressionContainer(value, path);
+        }
+      },
+      ImportDeclaration: path => {
+        const node = path.node;
+
+        if (node.source.value === 'classnames') {
+          node.specifiers.forEach(p => {
+            if (p.type === 'ImportDefaultSpecifier') {
+              csName = p.local.name;
+            }
+          });
         }
       },
     },
