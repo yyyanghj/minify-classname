@@ -1,6 +1,6 @@
 {
   "name": "minify-classname",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "minify classname",
   "main": "src/index.js",
   "author": "yang",
