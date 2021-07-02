@@ -1,8 +1,5 @@
 # minify-classname
-(WIP) minify classname for jsx
-
-
-## Preview
+minify classname for jsx
 
 
 ### before
@@ -85,7 +82,7 @@ export default function App() {
 ```
 
 
-## quick start
+## How to use
 ```js
 // webpack.config.js
 const MinifyClassName = require('minify-classname')
